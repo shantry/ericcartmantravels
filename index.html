@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eric Cartman Plush World Tour</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(200, 200, 255, 0.2));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #333;
+      padding: 2rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      margin-top: 0;
+      font-style: italic;
+    }
+
+    #map {
+      width: 100%;
+      height: 70vh;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .mapboxgl-popup-content {
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .location-list {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 90%;
+      margin: 0 auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .location-list h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding-bottom: 0.5rem;
+    }
+
+    .location-list ul {
+      padding-left: 1.2rem;
+    }
+
+    .location-list li {
+      margin-bottom: 0.5rem;
+    }
+
+    .location-list span {
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Eric Cartman Plush World Tour</h1>
+  <p>Click a pin to see where Eric has been!</p>
+
+  <div id="map"></div>
+
+  <div class="location-list">
+    <h2>🗺️ Places Eric Has Visited</h2>
+    <ul>
+      <li id="loc-north-carolina"><span>North Carolina (Origin)</span></li>
+      <li id="loc-rome"><span>Rome, Italy</span></li>
+      <li id="loc-florence"><span>Florence, Italy</span></li>
+      <li id="loc-monaco"><span>Monaco</span></li>
+      <li id="loc-zurich"><span>Zurich, Switzerland</span></li>
+      <li id="loc-lucerne"><span>Lucerne, Switzerland</span></li>
+      <li id="loc-nice"><span>Nice, France</span></li>
+      <li id="loc-cannes"><span>Cannes, France</span></li>
+    </ul>
+  </div>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG93ZXJmdWxwaWUiLCJhIjoiY2wzcDZ4eHJ6MHZlNzNvdXZud2FwMXc1bSJ9.EK_CT3Iw2bdg7SlR25w8bw'; // Replace with your key
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [10, 45],
+      zoom: 4,
+    });
+
+    const locations = [
+      { name: 'North Carolina (Origin)', coords: [-79.0193, 35.7596], photos: [] },
+      { name: 'Rome', coords: [12.4964, 41.9028], photos: [
+        'images/rome/rome1.jpeg',
+        'images/rome/06EDD92D-EC88-4707-9A8F-6130ACFAFF43_1_105_c.jpeg',
+        'images/rome/D2F9F62E-2875-43B1-B242-339FBAC969FC_1_105_c.jpeg',
+        'images/rome/B58BEC31-7BB3-4516-840B-0112B6C2371F_1_105_c.jpeg',
+        'images/rome/ADA3862B-77AF-4505-A3EF-2B21B7CDC5C3_1_105_c.jpeg',
+        'images/rome/988DA3B5-9925-43C6-B571-DF66740BFBBB_1_105_c.jpeg',
+        'images/rome/9C5756C1-1D1C-4016-BFC5-BF55B1D28EC0_1_105_c.jpeg',
+        'images/rome/42540172-6A4D-4F53-9CE4-9A2FEDD6C1CA_1_105_c.jpeg',
+        'images/rome/28E76023-DD99-495D-8818-22567E033754_1_105_c.jpeg',
+        'images/rome/3252197E-5893-4C72-B253-D35A3A145CAD_1_105_c.jpeg'
+      ] },
+      { name: 'Florence', coords: [11.2558, 43.7696], photos: ['florence1.jpg'] },
+      { name: 'Monaco', coords: [7.4246, 43.7384], photos: ['monaco1.jpg'] },
+      { name: 'Zurich', coords: [8.5417, 47.3769], photos: ['zurich1.jpg'] },
+      { name: 'Lucerne', coords: [8.3093, 47.0502], photos: ['lucerne1.jpg'] },
+      { name: 'Nice', coords: [7.2619, 43.7102], photos: ['nice1.jpg'] },
+      { name: 'Cannes', coords: [7.0174, 43.5528], photos: ['cannes1.jpg'] },
+    ];
+
+    locations.forEach(loc => {
+      new mapboxgl.Marker()
+        .setLngLat(loc.coords)
+        .setPopup(
+          new mapboxgl.Popup({ offset: 25 }).setHTML(
+            `<h3>${loc.name}</h3>
+             <p>${loc.photos.length ? 'Photos:' : 'No photos yet'}</p>
+             ${loc.photos.map(photo => `<img src="${photo}" style="width:100px;margin:4px;border-radius:8px;" />`).join('')}`
+          )
+        )
+        .addTo(map);
+    });
+
+    const locationMap = {
+      'loc-north-carolina': [-79.0193, 35.7596],
+      'loc-rome': [12.4964, 41.9028],
+      'loc-florence': [11.2558, 43.7696],
+      'loc-monaco': [7.4246, 43.7384],
+      'loc-zurich': [8.5417, 47.3769],
+      'loc-lucerne': [8.3093, 47.0502],
+      'loc-nice': [7.2619, 43.7102],
+      'loc-cannes': [7.0174, 43.5528],
+    };
+
+    Object.entries(locationMap).forEach(([id, coords]) => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => {
+          map.flyTo({ center: coords, zoom: 10 });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
